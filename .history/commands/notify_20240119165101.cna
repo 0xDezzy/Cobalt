@@ -1,0 +1,41 @@
+$notify = 0;
+
+on event_public {
+    # local variable to store the command
+    local('@input $cmd @args')
+    
+    # If the first character is a !, then it is a command
+    if (substr($2, 0, 1) eq "!") {
+        @input = split(" ", $2); # Split on spaces
+        $cmd = @input[0]; #command is !<cmd> arg1 arg2 arg3 ...
+        @args = sublist(@input, 1); # sublist gets everything after !cmd
+
+        ## Debug logging
+        # println("Command received: $cmd");
+        # println("Arguments: " . @args);
+
+        if ($cmd eq "!notify") {
+            if (!@args) {
+                if ($notify == 1) {
+                    elog("Notifications: \c9ON\o");
+                }
+                else {
+                    elog("Notifications: \c4OFF\o");
+                }
+            }
+            else {
+                if (@args[0] eq "on") {
+                    $notify = 1;
+                    elog("Notifications: \c9ON\o");
+                }
+                else if (@args[0] eq "off") {
+                    $notify = 0;
+                    elog("Notifications: \c4OFF\o");
+                }
+                else {
+                    say("Please choose \c9ON\o or \c4OFF\o!");
+                }
+            }
+        }
+    }
+}

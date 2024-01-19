@@ -1,0 +1,27 @@
+on event_public {
+    # local variable to store the command
+    local('@input $cmd @args')
+    
+    # If the first character is a !, then it is a command
+    if (substr($2, 0, 1) eq "!") {
+        @input = split(" ", $2); # Split on spaces
+        $cmd = @input[0]; #command is !<cmd> arg1 arg2 arg3 ...
+        @args = sublist(@input, 1); # sublist gets everything after !cmd
+
+        ## Debug logging
+        # println("Command received: $cmd");
+        # println("Arguments: " . @args);
+
+        if ($cmd eq "!beacons") {
+            elog ("Number of Beacons: " . size(beacons()));
+            foreach $b (beacons()) {
+                if (-isadmin $b['id']) {
+                    elog("\c5Admin \c6Beacon: $b['id'] on $b['computer'] as $b['user']\o");                    
+                }
+                else {
+                    elog("\c6Beacon: $b['id'] on $b['computer'] as $b['user']\o");                    
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,25 @@
+$username = mynick();
+$teamserver = localip();
+$timestamp = formatDate("MM/dd/yyyy - HH:mm:ss z");
+$webhookURL = 'https://discordapp.com/api/webhooks/806419146589470740/wi6KHgPeFTL_nWEkaAH9dnOruGh4fu6SHXjD_dy3R0taqjE8LWFas5lPOCXsRYqp35x-';
+
+$stale_value = 300000;
+
+@staleBeacons = @();
+
+on heartbeat_5m {
+
+	foreach $beacon (beacons()) {
+		if (($beacon["last"] > $stale_value) && ($beacon["pbid"] eq '')) {
+            
+            add(@staleBeacons, $beacon);
+
+			$last_checkin = $beacon["last"] / 1000;
+            $msg = "<@&806626405604655146> There is a stale beacon on " . $teamserver . " that hasn't checked in for " . $last_checkin . " seconds.";
+			# println("There is a stale beacon on ' . $teamserver . ' that hasn\'t checked in for ' . $last_checkin . ' seconds.");
+			@curl_command = @('curl','-X','POST','-H','Content-Type: application/json','--data','{"username": "' . $username . '","embeds": [{"fields":[{"name": "Teamserver","value": "'. $teamserver .'","inline": true},{"name": "Timestamp","value": "'. $timestamp .'","inline": true},{"name": "Message","value": "' . $msg . '"}]}]}',$webhookURL);
+			exec(@curl_command);	
+		}
+	}
+    highlight("beacons", @staleBeacons, "bad");
+}

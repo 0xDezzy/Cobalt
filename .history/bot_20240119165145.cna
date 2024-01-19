@@ -1,0 +1,67 @@
+# Cobalt
+# A bot for cobalt strike written in Sleep
+# Justin Wagner - 2024
+
+# Get Current working directory
+$currentWorkingDirectory = cwd();
+
+# Set the bot location
+$cobaltDir = '/cobalt'
+
+# Create the strings for the commands, functions, and modules directory
+$commandsDir = $currentWorkingDirectory . $cobaltDir . "/commands";
+$functionsDir = $currentWorkingDirectory . $cobaltDir . "/functions";
+$modulesDir = $currentWorkingDirectory . $cobaltDir . "/modules";
+
+# Get the files in the command and module directories
+@commands = ls($commandsDir);
+@modules = ls($modulesDir);
+@functions = ls($functionsDir);
+
+### Includes
+
+# Include Commands
+foreach $index => $command (@commands)
+{
+    try
+    {
+        include($command);
+        println("[-] Loaded Command: " . $command);  
+    }
+    catch $message
+    {
+        warn("Failed to load file! $message");
+        printAll(getStackTrace());    
+    }
+}
+
+# Include Modules
+foreach $index => $module (@modules)
+{
+    try
+    {
+        include($module);
+        println("[+] Loaded Module: " . $module);  
+    }
+    catch $message
+    {
+        warn("Failed to load file! $message");
+        printAll(getStackTrace());    
+    }
+}
+
+# Include Functions
+foreach $index => $function (@functions)
+{
+    try
+    {
+        include($function);
+        println("[X] Loaded Function: " . $function);  
+    }
+    catch $message
+    {
+        warn("Failed to load file! $message");
+        printAll(getStackTrace());    
+    }
+}
+
