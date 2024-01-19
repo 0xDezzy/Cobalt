@@ -2,6 +2,9 @@
 # A bot for cobalt strike written in Sleep
 # Justin Wagner - 2024
 
+# Bot version
+$version = "1.0.0";
+
 # Get Current working directory
 $currentWorkingDirectory = cwd();
 
@@ -65,3 +68,6 @@ foreach $index => $function (@functions)
     }
 }
 
+on on ready {
+    say(mynick() . @ . localip() . "\[Cobalt v" . $version . "\] Ready!");
+}
