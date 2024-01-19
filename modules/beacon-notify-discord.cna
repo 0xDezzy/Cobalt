@@ -38,7 +38,7 @@ on beacon_initial {
         $notifyWho = '<@&807110593492287499>';
 
         # Webhook URL to send the notifications to
-        $webhookURL = 'https://discordapp.com/api/webhooks/806419146589470740/wi6KHgPeFTL_nWEkaAH9dnOruGh4fu6SHXjD_dy3R0taqjE8LWFas5lPOCXsRYqp35x-';
+        $webhookURL = '';
         
         # Create the message
         $msg = "New Beacon: " . $bUser . "@" . $bIntIP . " (". $bName . ")";
