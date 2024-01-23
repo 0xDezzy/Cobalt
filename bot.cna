@@ -9,7 +9,7 @@ $version = "1.0.0";
 $currentWorkingDirectory = cwd();
 
 # Set the bot location
-$cobaltDir = '/cobalt'
+$cobaltDir = '/cobalt';
 
 # Create the strings for the commands, functions, and modules directory
 $commandsDir = $currentWorkingDirectory . $cobaltDir . "/commands";
