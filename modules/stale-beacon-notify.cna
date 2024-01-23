@@ -1,7 +1,7 @@
 $username = mynick();
 $teamserver = localip();
 $timestamp = formatDate("MM/dd/yyyy - HH:mm:ss z");
-$webhookURL = 'https://discordapp.com/api/webhooks/806419146589470740/wi6KHgPeFTL_nWEkaAH9dnOruGh4fu6SHXjD_dy3R0taqjE8LWFas5lPOCXsRYqp35x-';
+$webhookURL = '';
 
 $stale_value = 300000;
 
