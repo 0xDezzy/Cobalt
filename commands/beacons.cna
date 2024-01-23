@@ -12,7 +12,7 @@ on event_public {
         # println("Command received: $cmd");
         # println("Arguments: " . @args);
 
-        if ($cmd eq "!beacons") {
+        if ($cmd eq "#beacons") {
             elog ("Number of Beacons: " . size(beacons()));
             foreach $b (beacons()) {
                 if (-isadmin $b['id']) {

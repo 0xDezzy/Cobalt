@@ -3,7 +3,7 @@ on event_public {
     local('@input $cmd @args')
     
     # If the first character is a !, then it is a command
-    if (substr($2, 0, 1) eq "!") {
+    if (substr($2, 0, 1) eq "#") {
         @input = split(" ", $2); # Split on spaces
         $cmd = @input[0]; #command is !<cmd> arg1 arg2 arg3 ...
         @args = sublist(@input, 1); # sublist gets everything after !cmd
@@ -12,7 +12,7 @@ on event_public {
         # println("Command received: $cmd");
         # println("Arguments: " . @args);
 
-        if ($cmd eq "!psexec") {
+        if ($cmd eq "#psexec") {
             if (size(@args) == 3) {
                 $bid      = @args[0];
                 $target   = @args[1];
